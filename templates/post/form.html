@@ -1,20 +1,25 @@
-<!DOCTYPE html>
-<html lang="tr-TR">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <form action="" method="POST">
-        {% csrf_token %}
-         <h1>Form</h1>
+{% load crispy_forms_tags %}
 
-    {{ form.as_p }} <!-- _p paragraf olarak kapla -->
-    <input type="submit" value="Gönder">
-    </form>
+{% block body %}
+ <div class="container">
+     <div class="row">
+          <div class="col-md-6 offset-3">
+               <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                     <h1>Form</h1>
+            
+               <!-- form.as_p --  _p paragraf olarak kapla -->
+                {{ form|crispy }} <!-- _p paragraf olarak kapla -->
+                <input type="submit" value="Gönder" class="btn btn-primary">
+                </form>
+          </div>
+     </div>
+ </div>
+{% endblock %}
    
-</body>
-</html>
+
+
+    
+ 

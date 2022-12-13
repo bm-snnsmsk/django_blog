@@ -1,18 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posts</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block site_baslik %}Anasayfa Başlık - {{ block.super }} {% endblock %} 
+
+{% block body %}
+   
+
+
+<div class="container">
+
+
+
     {% for i in posts %}
-    <h4>{{ i.id }} - <a href="{{ i.get_absolute_url }}">{{ i.title }}</a> - {{ i.content }} - {{ i.publishing_date }}</h4>   
+    
+
+    <div class="card m-1" style="width: 18rem;">
+        {% if i.image %}
+           <img width="50" src="{{ i.image.url }}" class="card-img-top" alt="...">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ i.title }} <small>{{ i.publishing_date|timesince }} önce </small> </h5> <!-- |timesince ; kaç gün önce sağlar-->
+          <p class="card-text">{{ i.content|linebreaks|truncatechars:100  }}</p>  <!-- |linebreaks ; enterla yapılan boşlulkların gözükmesini sağlar--> <!-- |truncatewords:10  ; 10 kelimeden sonrasını ... ile gizle--><!-- |truncatechars:100  ; 100 karakterden sonrasını ... ile gizle-->
+          <a href="{% url 'post:detail' i.id %}" class="btn btn-primary">Detay</a>
+          <!-- <a href="{{ post.get_update_url }}" class="btn btn-warning">Güncelle</a>
+          <a href="{% url 'post:delete' i.id %}" class="btn btn-danger">Sil</a> -->
+        </div>
+      </div>
+
     {% endfor %}
 
-        {# {% url 'detail' i.id %} #} 
-        {# /post/{{ i.id }} #} 
+</div>
+        {# {% url 'post:detail' i.id %} #} 
+        {# {{ i.get_absolute_url }} #} 
+        {# /post/{{ i.id }} #}
+        
+{% endblock %}
+   
 
-</body>
-</html>
+
+ 

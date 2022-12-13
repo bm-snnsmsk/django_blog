@@ -1,14 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details</title>
-</head>
-<body>
+
+{% extends 'base.html' %}
+
+{% block body %}
+    
+
+
+
+<div class="card m-1" style="width: 18rem;">
+  {% if i.image %}
+  <img width="50" src="{{ post.image.url }}" class="card-img-top" alt="...">
+{% endif %}
+    <div class="card-body">
+      <h5 class="card-title">{{ post.title }} <small>{{ post.publishing_date|timesince  }} önce</small> </h5> <!-- |timesince ; kaç gün önce sağlar-->
+      <p class="card-text">{{ post.content|linebreaks}}</p>     <!-- |linebreaks ; enterla yapılan boşlulkların gözükmesini sağlar-->
+     
+      {% if request.user.is_authenticated %} <!-- admin girişi yoksa düzenleme ve silme yapamayacak -->
+      <a href="{% url 'post:update' post.id %}" class="btn btn-warning">Güncelle</a>
+      <a href="{% url 'post:delete' post.id %}" class="btn btn-danger">Sil</a>
+      {% endif %}
+    </div>
+  </div>
+
+
+
+
+{% endblock %}
    
-    <h4>{{ post.id }} - {{ post.title }} - {{ post.content }} - {{ post.publishing_date }}</h4>
-  
-</body>
-</html>
+
+
+
+

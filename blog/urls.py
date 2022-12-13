@@ -15,14 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 
 ## url kulanmak için
-from home.views import home_view
+# from home.views import home_view
 urlpatterns = [
+    # url(r'^$', home_view),
     path('admin/', admin.site.urls),
 
     path('', include('home.urls')),
-    # url(r'^$', home_view),
-
-    path('post/', include('post.urls')),
+    path('post/', include('post.urls'))
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

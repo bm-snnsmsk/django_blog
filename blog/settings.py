@@ -39,8 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'post',
+    'crispy_forms',
+
     'home',
+    'post',
+    
 ]
 
 MIDDLEWARE = [
@@ -124,8 +127,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static') ## local de çalışır ama server'da bulunamayacağından hata verecektir,  bu yüzden aşağıdaki satır gerekli ve artık bu satıra gerek kalmayacaktır
+]
+## STATIC_ROOT = os.path.join(BASE_DIR, 'static/') ## serverda yayınlanmada problem çıkmaması için
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3' ## crispy forms için
+
+
+MEDIA_URL = '/media/' ## kullanıcıların download edilen dosyalar
+MEDIA_ROOT = os.path.join(BASE_DIR, "media") ## upload dosyalar için klaösr
+
+

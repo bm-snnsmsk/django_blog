@@ -11,4 +11,5 @@ class PostForm(forms.ModelForm) :
             'title',
             'content',
             ## 'publishing_date',  otomatik olarak atandığı için
+            'image' ## dosya ekleme 
         ]

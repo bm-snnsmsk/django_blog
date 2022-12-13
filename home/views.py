@@ -4,7 +4,7 @@ from django.shortcuts import render, HttpResponse
 def home_view(req) :
     # return HttpResponse("home sayfası  django")
     if req.user.is_authenticated :
-        content = {'name' :' sinan şimşek',}
+        content = {'name' :'sinan şimşek',}
     else :
         content = {'name' :' Misafir',}
-    return render(req,'index.html', content)
+    return render(req,'home/anasayfa.html', content)

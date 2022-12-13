@@ -1,6 +1,8 @@
-from django.shortcuts import render ,HttpResponse, get_object_or_404,HttpResponseRedirect, redirect
+from django.shortcuts import render ,HttpResponse, get_object_or_404,HttpResponseRedirect, redirect, Http404
 from post.models import Post
 from post.forms import PostForm
+from django.contrib import messages
+from django.utils.text import slugify
 
 
 # Create your views here.
@@ -14,20 +16,35 @@ def index(r) :
     return render(r,'post/index.html',{'posts':posts})
 
 def detail(r, post_id) :
-    post = get_object_or_404(Post, id= post_id)
+    post = get_object_or_404(Post, id= post_id) ## id yerine slug kullanılırsa id ile değiştirlmeli
     context = {'post':post}
     return render(r,'post/detail.html',context)
 
 def delete(r, del_id) :
-    del_post = get_object_or_404(Post, id= del_id)
+    if not r.user.is_authenticated(): ## giriş yapılmadıysa silme yapamaz
+        return Http404()
+    del_post = get_object_or_404(Post, id= del_id)## id yerine slug kullanılırsa id ile değiştirlmeli
     del_post.delete()
     return redirect("post:index")
 
 def update(r,id) :
-    post = get_object_or_404(Post, id= id)
-    form = PostForm(r.POST or None, instance=post)
+    if not r.user.is_authenticated(): ## giriş yapılmadıysa düzenleme yapamaz
+        return Http404()
+
+    post = get_object_or_404(Post, id= id)## id yerine slug kullanılırsa id ile değiştirlmeli
+    form = PostForm(r.POST or None, r.FILES or None, instance=post)
     if form.is_valid() :
-        form.save()
+
+        #form.save() ## postu save 'e kaydet
+
+        ## 2. yöntem için yoruöma alındı START
+        # form.save(commit=False) ## postu save 'e kaydetmez ama nesneyi geri döndürür
+        # # post.slug = slugify(post.title) ## ı harflerini siler
+        # post.slug = slugify(post.title.replace("ı","i"))
+        ## 2. yöntem için yoruöma alındı  END
+
+        form.save() ## postu save 'e kaydet
+        messages.success(r,"işlem başarılı")
         return HttpResponseRedirect(post.get_absolute_url())
     else :
         print("hata : validation")
@@ -38,8 +55,9 @@ def update(r,id) :
 
     return render(r,'post/form.html',context)
 
-def create(r) :
-    
+def create(request) :
+    if not request.user.is_authenticated:
+        return Http404()
     
     # if r.method == "POST" :
     #     print(r.POST)
@@ -63,17 +81,15 @@ def create(r) :
     #     form = PostForm()
     
     ## alternatif yöntem --- 333
-    form = PostForm(r.POST or None)
+    form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid() :
         result = form.save()
-        return HttpResponseRedirect(result.get_absolute_url())
+        messages.success(request,"işlem başarılı")
+        return redirect('post:index')
     else:
         print("bilgiler geçersiz")
     ############################################
-
     context = {
         'form':form
     }
-
-
-    return render(r,'post/form.html',context)
+    return render(request,'post/form.html',context)

@@ -1,0 +1,4 @@
+body{
+    background-color: blueviolet;
+    padding-top: 70px; /* içeriğin bir kısmı fixed-top arkasında kaybolmasın */
+}
